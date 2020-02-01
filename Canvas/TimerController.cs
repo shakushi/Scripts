@@ -16,6 +16,10 @@ public class TimerController : MonoBehaviour
     //タイマー用テキスト
     private Text timerText;
 
+    private bool isClear;
+    public GameObject obj;
+    private PanelAction act;
+
     public static bool clearCheck = false;
     // Start is called before the first frame update
     void Start()
@@ -23,13 +27,14 @@ public class TimerController : MonoBehaviour
         totalTime = seconds;
         oldSeconds = 0f;
         timerText = GetComponentInChildren<Text>();
+        isClear = false;
+        act = obj.GetComponent<PanelAction>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // if (!ClearController.clear)
-        if (true)
+        if (!isClear)
         {
             //　制限時間が0秒以下なら何もしない
             if (totalTime < 0f)
@@ -45,14 +50,16 @@ public class TimerController : MonoBehaviour
             if (totalTime != oldSeconds)
             {
                 // timerText.text = minute.ToString("0") + ":" + ((int)seconds).ToString("00");
-                timerText.text = ((int)totalTime).ToString("00.00");
+                timerText.text = (totalTime).ToString("00.00");
             }
             oldSeconds = totalTime;
-        }
 
-        if(totalTime <= 0f)
-        {
-            //SceneManager.LoadScene("ResultScene", LoadSceneMode.Additive);
+            if (totalTime <= 0f)
+            {
+                act.setFinish();
+                isClear = true;
+                SceneManager.LoadScene("result", LoadSceneMode.Additive);
+            }
         }
     }
 }
